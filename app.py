@@ -4,6 +4,7 @@ from datetime import datetime
 import pandas as pd
 import io
 
+# ========== BANCO DE DADOS ==========
 def init_db():
     conn = sqlite3.connect("cadastros.db")
     cursor = conn.cursor()
@@ -36,8 +37,10 @@ def inserir_dados(nome, telefone, endereco, nascimento, instagram, bairro, servi
     conn.commit()
     conn.close()
 
+# ========== INICIALIZA ==========
 init_db()
 
+# Limpeza de campos
 if st.session_state.get("clear_fields", False):
     st.session_state["nome"] = ""
     st.session_state["telefone"] = ""
@@ -48,15 +51,17 @@ if st.session_state.get("clear_fields", False):
     st.session_state["servico"] = "Massoterapia"
     st.session_state["clear_fields"] = False
 
+# ========== TÍTULO ==========
 st.title("Formulário de Cadastro de Serviços")
 
+# ========== FORMULÁRIO ==========
 with st.form("form_servico"):
     nome = st.text_input("Nome completo", key="nome")
     telefone = st.text_input("Telefone (com DDD)", key="telefone")
     endereco = st.text_input("Endereço", key="endereco")
     nascimento = st.text_input("Data de Nascimento (DD/MM/AAAA)", key="nascimento")
-    instagram = st.text_input("Instagram", key="instagram")
     bairro = st.text_input("Bairro", key="bairro")
+    instagram = st.text_input("Instagram", key="instagram")
 
     servico = st.selectbox(
         "Selecione o serviço desejado:",
@@ -78,15 +83,17 @@ with st.form("form_servico"):
 
     submitted = st.form_submit_button("Enviar")
 
+# ========== PROCESSAMENTO ==========
 if submitted:
     try:
-
+        # Valida formato da data
         datetime.strptime(nascimento.strip(), "%d/%m/%Y")
 
         if nome and telefone and endereco and bairro:
             inserir_dados(nome, telefone, endereco, nascimento.strip(), instagram, bairro, servico)
             st.success("Cadastro realizado com sucesso!")
 
+            # Marca para limpar no próximo ciclo
             st.session_state["clear_fields"] = True
             st.rerun()
         else:
@@ -94,6 +101,7 @@ if submitted:
     except ValueError:
         st.error("Data de nascimento inválida. Use o formato DD/MM/AAAA.")
 
+# ========== EXPORTAÇÃO EXCEL ==========
 st.markdown("---")
 st.subheader("Exportar cadastros para Excel")
 
