@@ -4,7 +4,42 @@ from datetime import datetime
 import pandas as pd
 import io
 
-# ========== BANCO DE DADOS ==========
+st.set_page_config(page_title="Conexão Ômega", page_icon="🧡", layout="centered")
+
+
+st.markdown("""
+    <style>
+        body {
+            background-color: #111111;
+        }
+        .main {
+            background-color: #1e1e1e;
+        }
+        input, select, textarea {
+            background-color: #262730 !important;
+            color: white !important;
+            border-radius: 6px !important;
+            padding: 6px !important;
+        }
+        .stButton>button {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .stDownloadButton>button {
+            background-color: #0099ff;
+            color: white;
+            border-radius: 6px;
+            padding: 8px 16px;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.image("logo_acao_omega.png", use_container_width=True)
+
 def init_db():
     conn = sqlite3.connect("cadastros.db")
     cursor = conn.cursor()
@@ -37,10 +72,8 @@ def inserir_dados(nome, telefone, endereco, nascimento, instagram, bairro, servi
     conn.commit()
     conn.close()
 
-# ========== INICIALIZA ==========
 init_db()
 
-# Limpeza de campos
 if st.session_state.get("clear_fields", False):
     st.session_state["nome"] = ""
     st.session_state["telefone"] = ""
@@ -51,10 +84,6 @@ if st.session_state.get("clear_fields", False):
     st.session_state["servico"] = "Massoterapia"
     st.session_state["clear_fields"] = False
 
-# ========== TÍTULO ==========
-st.title("Formulário de Cadastro de Serviços")
-
-# ========== FORMULÁRIO ==========
 with st.form("form_servico"):
     nome = st.text_input("Nome completo", key="nome")
     telefone = st.text_input("Telefone (com DDD)", key="telefone")
@@ -83,17 +112,14 @@ with st.form("form_servico"):
 
     submitted = st.form_submit_button("Enviar")
 
-# ========== PROCESSAMENTO ==========
 if submitted:
     try:
-        # Valida formato da data
         datetime.strptime(nascimento.strip(), "%d/%m/%Y")
 
         if nome and telefone and endereco and bairro:
             inserir_dados(nome, telefone, endereco, nascimento.strip(), instagram, bairro, servico)
             st.success("Cadastro realizado com sucesso!")
 
-            # Marca para limpar no próximo ciclo
             st.session_state["clear_fields"] = True
             st.rerun()
         else:
@@ -101,7 +127,6 @@ if submitted:
     except ValueError:
         st.error("Data de nascimento inválida. Use o formato DD/MM/AAAA.")
 
-# ========== EXPORTAÇÃO EXCEL ==========
 st.markdown("---")
 st.subheader("Exportar cadastros para Excel")
 
