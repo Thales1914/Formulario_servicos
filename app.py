@@ -4,7 +4,7 @@ from datetime import datetime
 import pandas as pd
 import io
 
-st.set_page_config(page_title="Conexão Ômega", page_icon="🧡", layout="centered")
+st.set_page_config(page_title="Conexão Ômega", layout="centered")
 
 
 st.markdown("""
