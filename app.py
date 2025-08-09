@@ -94,7 +94,7 @@ with st.form("form_servico"):
 
     servico = st.selectbox(
         "Selecione o serviço desejado:",
-        [
+     [
             "Massoterapia",
             "Apoio Psicológico 1",
             "Apoio Psicológico 2",
@@ -105,9 +105,13 @@ with st.form("form_servico"):
             "Himunização",
             "Apoio Jurídico",
             "Credencial Estacionamento",
-            "Corte de Cabelo"
-        ],
-        key="servico"
+            "Corte de Cabelo",
+            "Enfermagem (pagemenos)",
+            "Enfermagem",
+            "Exame de vista",
+            "Biblioteca SESC"
+     ],
+     key="servico"
     )
 
     submitted = st.form_submit_button("Enviar")
